@@ -66,6 +66,62 @@
                           </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('school') ? ' has-error' : '' }}">
+                          <label for="school" class="col-md-4 control-label">โรงเรียนที่ศึกษาในปัจจุบัน</label>
+                          <div class="col-md-6">
+                            <input id="school" type="text" class="form-control" name="school" value="{{ old('school') }}">
+                            @if ($errors->has('school'))
+                              <span class="help-block">
+                                <strong>กรุณากรอกข้อมูล</strong>
+                              </span>
+                            @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('school_class') ? ' has-error' : '' }}">
+                          <label for="school_class" class="col-md-4 control-label">ระดับการศึกษา</label>
+                          <div class="col-md-6">
+                            <input id="school_class" type="text" class="form-control" name="school_class" value="{{ old('school_class') }}">
+                            @if ($errors->has('school_class'))
+                              <span class="help-block">
+                                <strong>กรุณากรอกข้อมูล</strong>
+                              </span>
+                            @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('day') ? ' has-error' : '' }}">
+                          <label for="born" class="col-md-4 control-label">วันเกิด</label>
+                          <div class="col-md-2">
+                            <input type="text" class="form-control" name="day" value="{{ old('day') }}" placeholder="วัน">
+                          </div>
+                          <div class="col-md-3">
+                            <select class="form-control" name="month">
+                              <option>มกราคม</option>
+                              <option>กุมภาพันธ์</option>
+                              <option>มีนาคม</option>
+                              <option>เมษายน</option>
+                              <option>พฤษภาคม</option>
+                              <option>มิถุนายน</option>
+                              <option>กรกฎาคม</option>
+                              <option>สิงหาคม</option>
+                              <option>กันยายน</option>
+                              <option>ตุลาคม</option>
+                              <option>พฤศจิกายน</option>
+                              <option>ธันวาคม</option>
+                            </select>
+                          </div>
+                          <div class="col-md-2">
+                            <select class="form-control" name="year">
+                              <option>2542</option>
+                              <option>2543</option>
+                              <option>2544</option>
+                              <option>2545</option>
+                              <option>2546</option>
+                            </select>
+                          </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('tel') ? ' has-error' : '' }}">
                           <label for="tel" class="col-md-4 control-label">เบอร์โทรศัพท์</label>
                           <div class="col-md-6">

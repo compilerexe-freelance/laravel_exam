@@ -36,6 +36,11 @@ class UserController extends Controller
             'firstname'               =>  'required',
             'lastname'                =>  'required',
             'address'                 =>  'required',
+            'school'                  =>  'required',
+            'school_class'            =>  'required',
+            'day'                     =>  'required',
+            'month'                   =>  'required',
+            'year'                    =>  'required',
             'tel'                     =>  'required',
             'email'                   =>  'required',
             'username'                =>  'required',
@@ -53,6 +58,11 @@ class UserController extends Controller
                     'firstname'       =>  $request->firstname,
                     'lastname'        =>  $request->lastname,
                     'address'         =>  $request->address,
+                    'school'          =>  $request->school,
+                    'school_class'    =>  $request->school_class,
+                    'day'             =>  $request->day,
+                    'month'           =>  $request->month,
+                    'year'            =>  $request->year,
                     'tel'             =>  $request->tel,
                     'email'           =>  $request->email
                 ]);
@@ -62,6 +72,11 @@ class UserController extends Controller
                     'firstname'       =>  $request->firstname,
                     'lastname'        =>  $request->lastname,
                     'address'         =>  $request->address,
+                    'school'          =>  $request->school,
+                    'school_class'    =>  $request->school_class,
+                    'day'             =>  $request->day,
+                    'month'           =>  $request->month,
+                    'year'            =>  $request->year,
                     'tel'             =>  $request->tel,
                     'email'           =>  $request->email,
                     'password'        =>  Hash::make($request->password)
@@ -74,7 +89,22 @@ class UserController extends Controller
     public function getStartExam()
     {
         session(['current_menu'=>'start_exam']);
-        return view('user/start_exam');
+        $view_exam = DB::table('tb_statistic')->where('username', Auth::User()->username)->first();
+        $value = $view_exam->view_exam;
+        $value++;
+        if ($value > 3) {
+            DB::table('tb_statistic')->where('username', Auth::User()->username)->update([
+              'level'       =>    1,
+              'fail'        =>    0,
+              'view_exam'   =>    0
+            ]);
+            return view('user/start_exam', ['status_level_reset' => 'reset']);
+        } else {
+            DB::table('tb_statistic')->where('username', Auth::User()->username)->update([
+              'view_exam'   =>    $value
+            ]);
+            return view('user/start_exam', ['status_level_reset' => '']);
+        }
     }
 
     public function postSendAnswer(Request $request)
@@ -104,8 +134,9 @@ class UserController extends Controller
         $correct_id_23 = DB::table('tb_id_exam')->where('level', $request->level)->where('sub_level', $request->sub_level)->where('id_exam', 23)->first();
         $correct_id_24 = DB::table('tb_id_exam')->where('level', $request->level)->where('sub_level', $request->sub_level)->where('id_exam', 24)->first();
         $correct_id_25 = DB::table('tb_id_exam')->where('level', $request->level)->where('sub_level', $request->sub_level)->where('id_exam', 25)->first();
-        $score = 0;
 
+        // Check answer
+        $score = 0;
         if ($request->id_exam_1 == $correct_id_1->correct) {$score++;}
         if ($request->id_exam_2 == $correct_id_2->correct) {$score++;}
         if ($request->id_exam_3 == $correct_id_3->correct) {$score++;}
@@ -132,19 +163,20 @@ class UserController extends Controller
         if ($request->id_exam_24 == $correct_id_24->correct) {$score++;}
         if ($request->id_exam_25 == $correct_id_25->correct) {$score++;}
 
-        if ($score >= 17) {
+        if ($score >= 20) {
             $info_level = DB::table('tb_statistic')->where('username', Auth::User()->username)->first();
             $level  = $info_level->level;
             if ($level < 10) {
                 $level++;
                 DB::table('tb_statistic')->where('username', Auth::User()->username)->update([
-                    'level'   =>   $level,
-                    'fail'    =>   0
+                    'level'       =>    $level,
+                    'fail'        =>    0,
+                    'view_exam'   =>    0
                 ]);
             } else {
               return 'Your max level 10';
             }
-            return redirect()->back()->with('status_level_up', 'success');
+            return redirect()->back()->with('status_level_up', $score);
         } else {
             $info_fail = DB::table('tb_statistic')->where('username', Auth::User()->username)->first();
             $fail  = $info_fail->fail;
@@ -153,11 +185,12 @@ class UserController extends Controller
                 DB::table('tb_statistic')->where('username', Auth::User()->username)->update([
                     'fail'   =>   $fail
                 ]);
-                return redirect()->back();
+                return redirect()->back()->with('status_exam_fail', $score);;
             } else {
                 DB::table('tb_statistic')->where('username', Auth::User()->username)->update([
-                    'level'   =>   1,
-                    'fail'    =>   0
+                    'level'       =>    1,
+                    'fail'        =>    0,
+                    'view_exam'   =>    0
                 ]);
                 return redirect()->back()->with('status_level_reset', 'success');
             }

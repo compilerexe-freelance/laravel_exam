@@ -19,6 +19,11 @@ class CreateTable extends Migration
             $table->string('firstname')->unique();
             $table->string('lastname');
             $table->string('address');
+            $table->string('school');
+            $table->string('school_class');
+            $table->string('day');
+            $table->string('month');
+            $table->string('year');
             $table->string('tel')->unique();
             $table->string('email')->unique();
             $table->string('username')->unique();
@@ -32,6 +37,7 @@ class CreateTable extends Migration
             $table->integer('level');
             $table->integer('sub_level');
             $table->integer('fail');
+            $table->integer('view_exam');
             $table->timestamps();
         });
         Schema::create('tb_id_exam', function (Blueprint $table) {

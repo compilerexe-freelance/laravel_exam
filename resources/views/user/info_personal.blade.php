@@ -1,7 +1,11 @@
 @extends('layouts/user')
 
 @section('content')
-<?php $information = DB::table('tb_user')->where('username', Auth::User()->username)->first(); ?>
+<?php
+  $information = DB::table('tb_user')->where('username', Auth::User()->username)->first();
+  $info_month  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  $info_year   = ['2542','2543','2544','2545','2546'];
+?>
 <div class="container">
     <div class="row">
       @if (session('status'))
@@ -67,6 +71,57 @@
                                 <strong>กรุณากรอกข้อมูล</strong>
                               </span>
                             @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('school') ? ' has-error' : '' }}">
+                          <label for="school" class="col-md-4 control-label">โรงเรียนที่ศึกษาในปัจจุบัน</label>
+                          <div class="col-md-6">
+                            <input id="school" type="text" class="form-control" name="school" value="{{ $information->school }}">
+                            @if ($errors->has('school'))
+                              <span class="help-block">
+                                <strong>กรุณากรอกข้อมูล</strong>
+                              </span>
+                            @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('school_class') ? ' has-error' : '' }}">
+                          <label for="school_class" class="col-md-4 control-label">ระดับการศึกษา</label>
+                          <div class="col-md-6">
+                            <input id="school_class" type="text" class="form-control" name="school_class" value="{{ $information->school_class }}">
+                            @if ($errors->has('school_class'))
+                              <span class="help-block">
+                                <strong>กรุณากรอกข้อมูล</strong>
+                              </span>
+                            @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('day') ? ' has-error' : '' }}">
+                          <label for="born" class="col-md-4 control-label">วันเกิด</label>
+                          <div class="col-md-2">
+                            <input type="text" class="form-control" name="day" value="{{ $information->day }}" placeholder="วัน">
+                          </div>
+                          <div class="col-md-3">
+                            <select class="form-control" name="month">
+                              <option>{{ $information->month }}</option>
+                              @foreach ($info_month as $month)
+                                @if ($month != $information->month)
+                                  <option>{{ $month }}</option>
+                                @endif
+                              @endforeach
+                            </select>
+                          </div>
+                          <div class="col-md-2">
+                            <select class="form-control" name="year">
+                              <option>{{ $information->year }}</option>
+                              @foreach ($info_year as $year)
+                                @if ($year != $information->year)
+                                  <option>{{ $year }}</option>
+                                @endif
+                              @endforeach
+                            </select>
                           </div>
                         </div>
 
